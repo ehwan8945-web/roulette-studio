@@ -898,6 +898,14 @@ canvas {
 
   .sidebar {
     min-height: auto;
+    max-height: none;
+    border-right: 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  #projectList,
+  #sharedProjectList {
+    max-height: 150px;
   }
 
   .content-grid {
@@ -925,26 +933,90 @@ canvas {
 @media (max-width: 640px) {
   .workspace,
   .sidebar {
-    padding: 18px;
+    padding: 14px;
   }
 
   .topbar,
   .wheel-header,
   .panel-header {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .topbar-actions {
-    justify-content: flex-start;
+  .topbar {
+    gap: 10px;
   }
 
-  .wheel-header .primary-button,
-  .panel-header .ghost-button {
-    width: 100%;
+  .topbar-actions {
+    width: auto;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .tool-button,
+  .more-button {
+    width: 36px;
+    min-height: 36px;
+  }
+
+  .more-menu-panel {
+    right: auto;
+    left: 0;
   }
 
   .project-name-input {
-    font-size: 24px;
+    font-size: 21px;
+  }
+
+  .roulette-title-input {
+    font-size: 18px;
+  }
+
+  .content-grid {
+    gap: 12px;
+  }
+
+  .wheel-panel,
+  .editor-panel {
+    border-radius: 18px;
+    padding: 14px;
+  }
+
+  .wheel-stage {
+    margin: 14px auto;
+  }
+
+  .wheel-center {
+    width: 74px;
+    height: 74px;
+    font-size: 13px;
+  }
+
+  .pointer {
+    border-left-width: 14px;
+    border-right-width: 14px;
+    border-top-width: 26px;
+  }
+
+  .result-box {
+    min-height: 44px;
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .add-item-form {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .tab-button {
+    min-height: 30px;
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .add-tab-button {
+    min-width: 30px;
+    height: 30px;
   }
 }

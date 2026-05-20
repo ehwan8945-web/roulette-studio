@@ -415,6 +415,19 @@ function setSyncStatus(message, mode = "idle") {
   syncStatus.dataset.mode = mode;
 }
 
+function isBlockedInAppBrowser() {
+  const ua = navigator.userAgent.toLowerCase();
+  return [
+    "kakaotalk",
+    "fbav",
+    "fban",
+    "instagram",
+    "line/",
+    "naver",
+    "daumapps",
+  ].some((token) => ua.includes(token));
+}
+
 async function loadFirebaseApi() {
   if (firebaseApi) {
     return firebaseApi;
@@ -480,6 +493,11 @@ async function setupFirebase() {
 
 async function signIn() {
   try {
+    if (isBlockedInAppBrowser()) {
+      setSyncStatus("Google 로그인을 위해 오른쪽 위 메뉴에서 Chrome 또는 기본 브라우저로 열어주세요.", "error");
+      window.alert("카카오톡/인스타그램 같은 앱 안의 브라우저에서는 Google 로그인이 차단됩니다.\n\n오른쪽 위 메뉴에서 '브라우저로 열기' 또는 'Chrome에서 열기'를 선택한 뒤 다시 로그인해 주세요.");
+      return;
+    }
     rememberPendingShareFromUrl();
     const { api, auth } = await setupFirebase();
     const provider = new api.GoogleAuthProvider();

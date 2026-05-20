@@ -30,6 +30,8 @@ const accountPopover = document.querySelector("#accountPopover");
 const accountSummaryText = document.querySelector("#accountSummaryText");
 const appShell = document.querySelector(".app-shell");
 const sidebarResizer = document.querySelector("#sidebarResizer");
+const mobileMenuButton = document.querySelector("#mobileSidebarToggle");
+const mobileSidebarBackdrop = document.querySelector("#sidebarBackdrop");
 const syncStatus = document.querySelector("#syncStatus");
 const signInButton = document.querySelector("#signInButton");
 const signOutButton = document.querySelector("#signOutButton");
@@ -1042,6 +1044,22 @@ render();
 setupFirebase().catch((error) => setSyncStatus(error.message, "error"));
 
 let isResizingSidebar = false;
+
+function setMobileSidebarOpen(open) {
+  appShell.classList.toggle("sidebar-open", open);
+  mobileMenuButton.setAttribute("aria-expanded", String(open));
+  mobileMenuButton.setAttribute("aria-label", open ? "사이드바 닫기" : "사이드바 열기");
+}
+
+setMobileSidebarOpen(true);
+
+mobileMenuButton.addEventListener("click", () => {
+  setMobileSidebarOpen(!appShell.classList.contains("sidebar-open"));
+});
+
+mobileSidebarBackdrop.addEventListener("click", () => {
+  setMobileSidebarOpen(false);
+});
 
 sidebarResizer.addEventListener("pointerdown", (event) => {
   isResizingSidebar = true;

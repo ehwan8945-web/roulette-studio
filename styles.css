@@ -33,12 +33,15 @@ body {
     Inter, Pretendard, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
     sans-serif;
   font-size: 14px;
+  font-weight: 400;
 }
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
+  font-weight: 400;
 }
 
 button {
@@ -49,6 +52,13 @@ button {
   display: grid;
   grid-template-columns: var(--sidebar-width, 280px) 1px 1fr;
   min-height: 100vh;
+}
+
+.mobile-menu-button,
+.mobile-sidebar-backdrop,
+.mobile-sidebar-toggle,
+.sidebar-backdrop {
+  display: none;
 }
 
 .sidebar {
@@ -89,7 +99,7 @@ button {
   color: var(--ink);
   border: 1px solid #d8e0ec;
   box-shadow: 0 4px 14px rgba(30, 42, 60, 0.06);
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .brand h1,
@@ -106,7 +116,7 @@ button {
   margin: 3px 0 0;
   color: var(--muted);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -115,7 +125,7 @@ button {
   margin: 0 0 5px;
   color: var(--muted);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -136,16 +146,16 @@ button {
 .section-title {
   justify-content: space-between;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 500;
   color: #cbd5e1;
 }
 
 .icon-button {
   width: 34px;
   height: 34px;
-  border: 1px solid #d8d4cb;
+  border: 0;
   border-radius: 999px;
-  background: #ffffff;
+  background: transparent;
   color: var(--ink);
   font-size: 22px;
   line-height: 1;
@@ -200,7 +210,7 @@ button {
   border-radius: 50%;
   background: #ffffff;
   color: var(--blue-dark);
-  font-weight: 900;
+  font-weight: 500;
 }
 
 .account-summary {
@@ -212,7 +222,7 @@ button {
 .account-summary span {
   color: var(--muted);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .account-summary strong {
@@ -259,7 +269,7 @@ button {
   border-radius: 999px;
   background: #f7f9fc;
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .account-status {
@@ -290,7 +300,7 @@ button {
   color: #405069;
   padding: 8px 11px;
   text-align: left;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .project-button.active {
@@ -346,10 +356,10 @@ button {
   min-height: 40px;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
+  background: transparent;
   color: var(--muted);
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -364,9 +374,9 @@ button {
   min-height: 40px;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
+  background: transparent;
   color: var(--ink);
-  font-weight: 900;
+  font-weight: 400;
 }
 
 .tool-button svg {
@@ -386,7 +396,7 @@ button {
 
 .danger-tool {
   color: #b72d4d;
-  background: #fff7f9;
+  background: transparent;
 }
 
 .more-menu-panel {
@@ -414,7 +424,7 @@ button {
   padding: 0 10px;
   display: flex;
   align-items: center;
-  font-weight: 800;
+  font-weight: 500;
   text-align: left;
 }
 
@@ -430,7 +440,7 @@ button {
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--ink);
-  font-weight: 850;
+  font-weight: 500;
   outline: none;
 }
 
@@ -459,7 +469,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -499,6 +509,12 @@ button {
   gap: 8px;
   overflow-x: auto;
   padding: 6px 0 14px;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+
+.roulette-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .sync-panel {
@@ -640,8 +656,10 @@ button:disabled {
   color: var(--ink);
   padding: 6px 12px;
   min-height: 32px;
-  font-weight: 800;
+  font-weight: 500;
   font-size: 14px;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .tab-button.active {
@@ -655,9 +673,10 @@ button:disabled {
   height: 32px;
   border: 1px dashed #9aa7bc;
   border-radius: 999px;
-  background: transparent;
+  background: var(--chat-surface);
   color: var(--muted);
   font-size: 17px;
+  flex: 0 0 auto;
 }
 
 .content-grid {
@@ -892,15 +911,59 @@ canvas {
     grid-template-columns: 1fr;
   }
 
+  .mobile-sidebar-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 80;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--ink);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: none;
+    background: rgba(15, 23, 42, 0.18);
+  }
+
+  .app-shell.sidebar-open .sidebar-backdrop {
+    display: block;
+  }
+
   .sidebar-resizer {
     display: none;
   }
 
   .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 70;
+    width: min(86vw, 320px);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
     min-height: auto;
     max-height: none;
     border-right: 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 0;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 12px 0 32px rgba(15, 23, 42, 0.12);
+  }
+
+  .app-shell.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .workspace {
+    padding-top: 58px;
   }
 
   #projectList,

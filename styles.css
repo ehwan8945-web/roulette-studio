@@ -12,6 +12,7 @@
   --amber: #e7ad48;
   --green: #72b883;
   --violet: #8c79d8;
+  --chat-surface: #f4f4f5;
   --shadow: 0 12px 28px rgba(30, 28, 24, 0.08);
 }
 
@@ -50,7 +51,7 @@ button {
 }
 
 .sidebar {
-  background: #deddd2;
+  background: var(--chat-surface);
   color: var(--ink);
   border-right: 1px solid #d8d4cb;
   padding: 24px;
@@ -72,7 +73,7 @@ button {
   height: 38px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #ffffff;
   color: var(--ink);
   border: 1px solid #d8e0ec;
@@ -132,7 +133,7 @@ button {
   width: 34px;
   height: 34px;
   border: 1px solid #d8d4cb;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #ffffff;
   color: var(--ink);
   font-size: 22px;
@@ -225,7 +226,7 @@ button {
   gap: 10px;
   padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 22px;
   background: #ffffff;
   box-shadow: var(--shadow);
 }
@@ -244,7 +245,7 @@ button {
 .ghost-dark-button {
   min-height: 36px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: #f7f9fc;
   color: var(--ink);
   font-weight: 800;
@@ -273,7 +274,7 @@ button {
 .project-button {
   width: 100%;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 999px;
   background: transparent;
   color: #405069;
   padding: 12px 14px;
@@ -282,7 +283,7 @@ button {
 }
 
 .project-button.active {
-  background: #ededeb;
+  background: #ffffff;
   color: var(--ink);
 }
 
@@ -333,7 +334,7 @@ button {
   width: 42px;
   min-height: 40px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: #ffffff;
   color: var(--muted);
   font-size: 22px;
@@ -351,7 +352,7 @@ button {
   width: 42px;
   min-height: 40px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: #ffffff;
   color: var(--ink);
   font-weight: 900;
@@ -387,7 +388,7 @@ button {
   gap: 4px;
   padding: 6px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 20px;
   background: #ffffff;
   box-shadow: var(--shadow);
 }
@@ -396,7 +397,7 @@ button {
 .menu-file-action {
   min-height: 36px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 999px;
   background: transparent;
   color: var(--ink);
   padding: 0 10px;
@@ -441,7 +442,7 @@ button {
 .danger-button,
 .import-label {
   min-height: 40px;
-  border-radius: 8px;
+  border-radius: 999px;
   border: 1px solid var(--line);
   padding: 0 14px;
   display: inline-flex;
@@ -633,8 +634,8 @@ button:disabled {
 }
 
 .tab-button.active {
-  background: #deddd2;
-  border-color: #deddd2;
+  background: var(--chat-surface);
+  border-color: var(--chat-surface);
   color: #2f2f2d;
 }
 
@@ -659,7 +660,7 @@ button:disabled {
 .editor-panel {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 24px;
   box-shadow: var(--shadow);
 }
 
@@ -734,7 +735,7 @@ canvas {
 
 .result-box {
   min-height: 52px;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #eef6f6;
   border: 1px solid #c7e8e6;
   padding: 14px 16px;
@@ -755,7 +756,7 @@ canvas {
   width: 100%;
   min-height: 42px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   padding: 0 12px;
   outline: none;
 }
@@ -787,7 +788,7 @@ canvas {
 .remove-item {
   height: 38px;
   border: 1px solid #f1c5cf;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #fff7f9;
   color: #c13252;
   font-weight: 900;
@@ -795,7 +796,7 @@ canvas {
 
 .empty-state {
   border: 1px dashed #aeb8c9;
-  border-radius: 8px;
+  border-radius: 22px;
   padding: 22px;
   color: var(--muted);
   text-align: center;
@@ -804,7 +805,7 @@ canvas {
 .share-dialog {
   width: min(460px, calc(100vw - 28px));
   border: 0;
-  border-radius: 8px;
+  border-radius: 24px;
   padding: 0;
   box-shadow: var(--shadow);
 }
@@ -842,7 +843,7 @@ canvas {
   width: 100%;
   min-height: 42px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   padding: 0 12px;
   color: var(--ink);
   outline: none;

@@ -27,6 +27,7 @@ const moreActionsPanel = document.querySelector("#moreActionsPanel");
 const shareProjectButton = document.querySelector("#shareProjectButton");
 const accountMenuButton = document.querySelector("#accountMenuButton");
 const accountPopover = document.querySelector("#accountPopover");
+const accountSummary = document.querySelector(".account-summary");
 const accountSummaryText = document.querySelector("#accountSummaryText");
 const appShell = document.querySelector(".app-shell");
 const sidebarResizer = document.querySelector("#sidebarResizer");
@@ -83,6 +84,7 @@ function createRoulette(title = "새 룰렛", items = []) {
     id: uid("roulette"),
     title,
     items,
+    rotation: 0,
   };
 }
 
@@ -163,22 +165,37 @@ function getActiveRoulette() {
   return roulette;
 }
 
-function setActiveProject(projectId) {
+function getRouletteRotation(roulette) {
+  const rotation = Number(roulette.rotation);
+  return Number.isFinite(rotation) ? rotation : 0;
+}
+
+async function setActiveProject(projectId) {
+  const wasSharedWorkspace = activeWorkspace.type === "shared";
+  if (wasSharedWorkspace) {
+    stopCloudSync();
+  }
+
   activeWorkspace = { type: "personal" };
   state = personalState;
   activeProjectId = projectId;
   const project = getActiveProject();
   activeRouletteId = project.activeRouletteId || project.roulettes[0].id;
-  currentRotation = 0;
-  saveState();
-  subscribeToActiveWorkspace();
+  currentRotation = getRouletteRotation(getActiveRoulette());
+  saveState({ skipCloud: wasSharedWorkspace });
   render();
   setMobileSidebarOpen(false);
+
+  if (wasSharedWorkspace && currentUser) {
+    activeDocRef = await getDocRefForWorkspace(activeWorkspace);
+    await uploadCloudState();
+    await subscribeToActiveWorkspace();
+  }
 }
 
 function setActiveRoulette(rouletteId) {
   activeRouletteId = rouletteId;
-  currentRotation = 0;
+  currentRotation = getRouletteRotation(getActiveRoulette());
   saveState();
   render();
 }
@@ -199,6 +216,7 @@ function render() {
   renderSharedProjects();
   renderTabs(project);
   renderItems(roulette);
+  currentRotation = getRouletteRotation(roulette);
   drawWheel(roulette.items, currentRotation);
   resultBox.textContent = roulette.lastResult ? `결과: ${roulette.lastResult}` : "항목을 넣고 룰렛을 돌려보세요.";
   spinButton.disabled = isSpinning || roulette.items.length < 2;
@@ -423,18 +441,21 @@ function spinRoulette() {
   window.setTimeout(() => {
     isSpinning = false;
     const normalizedRotation = ((currentRotation % 360) + 360) % 360;
-    drawWheel(getActiveRoulette().items, normalizedRotation);
+    const activeRoulette = getActiveRoulette();
+    const result = getPointedItem(items, normalizedRotation);
+    activeRoulette.rotation = normalizedRotation;
+    activeRoulette.lastResult = result;
+    currentRotation = normalizedRotation;
+
     wheelCanvas.style.transition = "none";
+    drawWheel(activeRoulette.items, normalizedRotation);
     wheelCanvas.style.transform = "rotate(0deg)";
     requestAnimationFrame(() => {
       wheelCanvas.style.transition = "";
     });
-    currentRotation = normalizedRotation;
-    const result = getPointedItem(items, normalizedRotation);
-    getActiveRoulette().lastResult = result;
     saveState();
     resultBox.textContent = `결과: ${result}`;
-    render();
+    spinButton.disabled = activeRoulette.items.length < 2;
   }, 4400);
 }
 
@@ -910,11 +931,14 @@ moreActionsButton.addEventListener("click", () => {
   moreActionsPanel.hidden = !nextOpen;
   moreActionsButton.setAttribute("aria-expanded", String(nextOpen));
 });
-accountMenuButton.addEventListener("click", () => {
+function toggleAccountPopover() {
   const nextOpen = accountPopover.hidden;
   accountPopover.hidden = !nextOpen;
   accountMenuButton.setAttribute("aria-expanded", String(nextOpen));
-});
+}
+
+accountMenuButton.addEventListener("click", toggleAccountPopover);
+accountSummary.addEventListener("click", toggleAccountPopover);
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".more-menu")) {
     moreActionsPanel.hidden = true;

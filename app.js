@@ -45,6 +45,9 @@ const sharePasswordInput = document.querySelector("#sharePasswordInput");
 const shareLinkField = document.querySelector("#shareLinkField");
 const shareLinkInput = document.querySelector("#shareLinkInput");
 const copyShareLinkButton = document.querySelector("#copyShareLinkButton");
+const shareIdField = document.querySelector("#shareIdField");
+const shareIdInput = document.querySelector("#shareIdInput");
+const copyShareIdButton = document.querySelector("#copyShareIdButton");
 const confirmShareButton = document.querySelector("#confirmShareButton");
 const cancelShareButton = document.querySelector("#cancelShareButton");
 const deleteDialog = document.querySelector("#deleteDialog");
@@ -732,7 +735,9 @@ function openCreateShareDialog() {
   confirmShareButton.textContent = "공유 만들기";
   sharePasswordInput.value = "";
   shareLinkInput.value = "";
+  shareIdInput.value = "";
   shareLinkField.hidden = true;
+  shareIdField.hidden = true;
   shareDialog.showModal();
   sharePasswordInput.focus();
 }
@@ -753,7 +758,9 @@ function openJoinShareDialog(shareId = "") {
   confirmShareButton.textContent = "입장";
   sharePasswordInput.value = "";
   shareLinkInput.value = "";
+  shareIdInput.value = "";
   shareLinkField.hidden = true;
+  shareIdField.hidden = true;
   shareDialog.showModal();
   sharePasswordInput.focus();
 }
@@ -794,7 +801,9 @@ async function createSharedWorkspace(password) {
   }
   rememberSharedWorkspace(shareId, project.name);
   shareLinkInput.value = buildShareUrl(shareId);
+  shareIdInput.value = shareId;
   shareLinkField.hidden = false;
+  shareIdField.hidden = false;
   await navigator.clipboard?.writeText(shareLinkInput.value).catch(() => {});
   setSyncStatus("공유 링크를 만들었습니다. 링크가 복사되었습니다.", "ok");
 }
@@ -975,6 +984,15 @@ copyShareLinkButton.addEventListener("click", async () => {
   await navigator.clipboard?.writeText(shareLinkInput.value).catch(() => {});
   shareLinkInput.select();
   setSyncStatus("공유 링크를 복사했습니다.", "ok");
+});
+
+copyShareIdButton.addEventListener("click", async () => {
+  if (!shareIdInput.value) {
+    return;
+  }
+  await navigator.clipboard?.writeText(shareIdInput.value).catch(() => {});
+  shareIdInput.select();
+  setSyncStatus("공유 ID를 복사했습니다.", "ok");
 });
 
 projectNameInput.addEventListener("input", () => {

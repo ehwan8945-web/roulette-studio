@@ -148,6 +148,13 @@
             <button class="ghost-button" id="copyShareLinkButton" type="button">복사</button>
           </div>
         </label>
+        <label id="shareIdField" hidden>
+          <span>공유 ID</span>
+          <div class="copy-row">
+            <input id="shareIdInput" type="text" readonly />
+            <button class="ghost-button" id="copyShareIdButton" type="button">복사</button>
+          </div>
+        </label>
         <div class="dialog-actions">
           <button class="ghost-button" id="cancelShareButton" type="button">닫기</button>
           <button class="primary-button" id="confirmShareButton" type="submit">공유 만들기</button>
@@ -174,6 +181,6 @@
     </dialog>
 
     <script src="firebase-config.js?v=20260520"></script>
-    <script src="app.js?v=20260521-project-selection-spin-account-fix"></script>
+    <script src="app.js?v=20260521-share-link-id"></script>
   </body>
 </html>

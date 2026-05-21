@@ -939,6 +939,13 @@ canvas {
 
 .copy-row .ghost-button {
   min-height: 42px;
+  min-width: 58px;
+}
+
+.copy-row .ghost-button.copied {
+  border-color: #b9d9c8;
+  background: #edf8f1;
+  color: #28764d;
 }
 
 .copy-feedback {

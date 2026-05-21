@@ -760,11 +760,13 @@ function showShareInfo(shareId) {
 function showCopyFeedback() {
   clearTimeout(copyFeedbackTimer);
   copyShareLinkButton.textContent = "✓";
+  copyShareLinkButton.classList.add("copied");
   copyShareLinkButton.setAttribute("aria-label", "복사됨");
   copyShareFeedback.hidden = false;
   copyFeedbackTimer = window.setTimeout(() => {
     copyShareFeedback.hidden = true;
     copyShareLinkButton.textContent = "복사";
+    copyShareLinkButton.classList.remove("copied");
     copyShareLinkButton.setAttribute("aria-label", "공유 링크 복사");
   }, 1800);
 }

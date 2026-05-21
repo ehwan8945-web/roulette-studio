@@ -803,9 +803,7 @@ async function copyShareLink() {
   }
 
   if (!copied) {
-    shareLinkInput.focus();
-    shareLinkInput.select();
-    copied = document.execCommand?.("copy") || false;
+    copied = copyTextWithHiddenInput(shareLink);
   }
 
   if (copied) {
@@ -814,6 +812,20 @@ async function copyShareLink() {
   } else {
     setSyncStatus("복사가 안 되면 링크 칸을 길게 눌러 복사해 주세요.", "error");
   }
+}
+
+function copyTextWithHiddenInput(text) {
+  const helper = document.createElement("textarea");
+  helper.value = text;
+  helper.setAttribute("readonly", "");
+  helper.style.position = "fixed";
+  helper.style.left = "-9999px";
+  helper.style.top = "0";
+  document.body.append(helper);
+  helper.select();
+  const copied = document.execCommand?.("copy") || false;
+  helper.remove();
+  return copied;
 }
 
 async function migrateShareIdIfNeeded(shareId) {

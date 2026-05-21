@@ -727,13 +727,19 @@ async function hashPassword(password) {
 }
 
 function createShareId() {
-  return crypto.getRandomValues(new Uint32Array(4)).reduce((text, value) => text + value.toString(36), "");
+  const alphabet = "abcdefghijkmnpqrstuvwxyz23456789";
+  const values = crypto.getRandomValues(new Uint8Array(8));
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
 }
 
 function buildShareUrl(shareId) {
   const url = new URL(window.location.href);
   url.searchParams.set("share", shareId);
   return url.toString();
+}
+
+function buildShareMessage(shareId) {
+  return `공유 ID: ${shareId}\n공유 링크: ${buildShareUrl(shareId)}`;
 }
 
 function openCreateShareDialog() {
@@ -778,11 +784,22 @@ function openJoinShareDialog(shareId = "") {
 }
 
 function extractShareId(value) {
+  const text = value.trim();
+  const shareParam = text.match(/[?&]share=([^&\s]+)/);
+  if (shareParam?.[1]) {
+    return decodeURIComponent(shareParam[1]);
+  }
+
+  const labelledId = text.match(/공유\s*ID\s*:\s*([a-z0-9-]+)/i);
+  if (labelledId?.[1]) {
+    return labelledId[1].trim();
+  }
+
   try {
-    const url = new URL(value);
-    return url.searchParams.get("share") || value.trim();
+    const url = new URL(text);
+    return url.searchParams.get("share") || text;
   } catch {
-    return value.trim();
+    return text;
   }
 }
 
@@ -826,7 +843,7 @@ async function joinSharedWorkspace(shareId, password) {
   const docRef = api.doc(db, "sharedWorkspaces", shareId);
   const snapshot = await api.getDoc(docRef);
   if (!snapshot.exists()) {
-    throw new Error("공유 룰렛을 찾을 수 없습니다.");
+    throw new Error("공유 룰렛을 찾을 수 없습니다. 공유 ID나 링크를 다시 확인해 주세요.");
   }
   const payload = snapshot.data();
   if (payload.passwordHash !== await hashPassword(password)) {
@@ -1002,9 +1019,9 @@ copyShareIdButton.addEventListener("click", async () => {
   if (!shareIdInput.value) {
     return;
   }
-  await navigator.clipboard?.writeText(shareIdInput.value).catch(() => {});
+  await navigator.clipboard?.writeText(buildShareMessage(shareIdInput.value)).catch(() => {});
   shareIdInput.select();
-  setSyncStatus("공유 ID를 복사했습니다.", "ok");
+  setSyncStatus("공유 ID와 링크를 복사했습니다.", "ok");
 });
 
 projectNameInput.addEventListener("input", () => {
@@ -1111,7 +1128,11 @@ shareForm.addEventListener("submit", async (event) => {
       shareDialog.close();
     }
   } catch (error) {
-    setSyncStatus(error.message || "공유 처리에 실패했습니다.", "error");
+    const message = error.message || "공유 처리에 실패했습니다.";
+    setSyncStatus(message, "error");
+    if (shareDialogMode === "join") {
+      window.alert(message);
+    }
   } finally {
     confirmShareButton.disabled = false;
   }

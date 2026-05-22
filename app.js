@@ -22,10 +22,6 @@ const itemInput = document.querySelector("#itemInput");
 const itemList = document.querySelector("#itemList");
 const deleteRouletteButton = document.querySelector("#deleteRouletteButton");
 const deleteProjectButton = document.querySelector("#deleteProjectButton");
-const exportButton = document.querySelector("#exportButton");
-const importInput = document.querySelector("#importInput");
-const moreActionsButton = document.querySelector("#moreActionsButton");
-const moreActionsPanel = document.querySelector("#moreActionsPanel");
 const shareProjectButton = document.querySelector("#shareProjectButton");
 const accountMenuButton = document.querySelector("#accountMenuButton");
 const accountPopover = document.querySelector("#accountPopover");
@@ -1127,11 +1123,6 @@ signOutButton.addEventListener("click", signOutUser);
 shareProjectButton.addEventListener("click", openCreateShareDialog);
 cancelShareButton.addEventListener("click", () => shareDialog.close());
 deleteProjectButton.addEventListener("click", openDeleteDialog);
-moreActionsButton.addEventListener("click", () => {
-  const nextOpen = moreActionsPanel.hidden;
-  moreActionsPanel.hidden = !nextOpen;
-  moreActionsButton.setAttribute("aria-expanded", String(nextOpen));
-});
 function toggleAccountPopover() {
   const nextOpen = accountPopover.hidden;
   accountPopover.hidden = !nextOpen;
@@ -1141,10 +1132,6 @@ function toggleAccountPopover() {
 accountMenuButton.addEventListener("click", toggleAccountPopover);
 accountSummary.addEventListener("click", toggleAccountPopover);
 document.addEventListener("click", (event) => {
-  if (!event.target.closest(".more-menu")) {
-    moreActionsPanel.hidden = true;
-    moreActionsButton.setAttribute("aria-expanded", "false");
-  }
   if (!event.target.closest(".account-compact")) {
     accountPopover.hidden = true;
     accountMenuButton.setAttribute("aria-expanded", "false");
@@ -1252,39 +1239,6 @@ function deletePersonalProject() {
   saveState();
   render();
 }
-
-exportButton.addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "roulette-projects.json";
-  link.click();
-  URL.revokeObjectURL(url);
-});
-
-importInput.addEventListener("change", async () => {
-  const file = importInput.files?.[0];
-  if (!file) {
-    return;
-  }
-
-  try {
-    const imported = JSON.parse(await file.text());
-    if (!imported?.projects?.length) {
-      throw new Error("Invalid file");
-    }
-    state = imported;
-    activeProjectId = state.activeProjectId || state.projects[0].id;
-    activeRouletteId = getActiveProject().activeRouletteId || getActiveProject().roulettes[0].id;
-    saveState();
-    render();
-  } catch {
-    resultBox.textContent = "가져오기 파일을 확인해 주세요.";
-  } finally {
-    importInput.value = "";
-  }
-});
 
 shareForm.addEventListener("submit", async (event) => {
   event.preventDefault();
